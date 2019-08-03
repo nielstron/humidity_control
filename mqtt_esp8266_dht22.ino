@@ -229,7 +229,7 @@ void publishMQTT(const char* value_name, const char* value, const char* subtopic
 }
 
 /*
-   Turn on the max Timer function
+   Turn on the max Timer function (timer on = lower level)
 */
 void turnMTOn() {
   mTIsOn = true;
@@ -244,7 +244,7 @@ void turnMTOn() {
 }
 
 /*
-   Turn on the max Timer function
+   Turn on the max Timer function (timer off = higher level)
 */
 void turnMTOff() {
   mTIsOn = false;
@@ -289,17 +289,17 @@ void loop() {
   if (currentMillis - lastSampleTime >= CONFIG_DHT_SAMPLE_DELAY) {
     lastSampleTime = currentMillis;
 
-	//Recreate DHT objects for reconfiguration of SDA and  SCL
-    DHT12 dht1(0x5c, 4, 5); //0x5c is I²C adress, pin 4, 5 pins for sensor
+    //Recreate DHT objects for reconfiguration of SDA and  SCL
+    DHT12 dht1(0x5c, 4, 5); //0x5c is I²C adress, pis 4, 5 for sensor
     {
-      //Lies alle daten aus und veröffentliche sie
       float humidity, celsius, absHumidity, dewPoint;
 
-      //Printe einen Fehler, falls es einen gibt und lies nichts aus
+      // If there is an error, print the error message and do not publish anything
       if (dht1.get() != 0) {
         Serial.print(String("Error reading temperature DHT ") + DHT_NAME_ONE + ": "); Serial.println(dht1.get());
       }
       else {
+      //Read data and publish
         celsius = dht1.cTemp;
         publishMQTT(
           "Temperature",
@@ -340,12 +340,11 @@ void loop() {
       }
     }
 
-    DHT dht2(12, 22); //der zweite (genaue) Sensor ist an pin 12 und ein modell der nummer 22
+    // second (more exact) sensor of model nr 22 is connected to pin 12
+    DHT dht2(12, 22);
     dht2.begin();
     {
-      //Lies alle daten aus und veröffentliche sie
       float humidity, celsius, absHumidity, dewPoint;
-      //Printe einen Fehler, falls es einen gibt und lies nichts aus
 
       if (isnan(dht2.readTemperature())) {
         Serial.print(String("Error reading temperature DHT ") + DHT_NAME_TWO );
@@ -389,15 +388,27 @@ void loop() {
       }
     }
 
-    //Schalte MaxTimer je nach Feuchtigkeit der Frischluft relativ zur Raumluft
-    //ist die raumluft zu trocken (55%) drossele den Lüfter
+    // Toggle maxTimer according to the humidity of the fresh air relative
+    // to the humidity of the room air
+    // the "timer" functionality was meant by the company to decrease or increase
+    // ventilation for some time (hence the term, usually some multiple of one hour)
+    // but can be used to externally control the recuperator as is done here
+
+    // Control rules
+    // outer humdity lower than inner humidity => turn on recuperator
+    // only if not too dry in the room (<=55%)
+    // and it is not too cold inside (<=18°C)
+    // and not too hot inside (>= 22°C)
     if (
       (freshAbsHum < roomAbsHum) && 
       (roomRelHum >= 55) && 
-      ((freshTemp < roomTemp && roomTemp >= 18) || (freshTemp >= roomTemp && roomTemp <= 22)) {
-      turnMTOff(); //kein Timer => höhere Leistung
+      (
+       (freshTemp < roomTemp && roomTemp >= 18) ||
+       (freshTemp >= roomTemp && roomTemp <= 22)
+    ) {
+      turnMTOff(); // no timer => more ventilation
     } else {
-      turnMTOn(); // Timer => verringerte Leistung
+      turnMTOn(); // timer => less ventilation
     }
   }
 }
