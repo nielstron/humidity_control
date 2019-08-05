@@ -37,10 +37,12 @@ const char* stateTopic = CONFIG_MQTT_TOPIC_STATE;
 const char* maxTimerTopic = CONFIG_MQTT_TOPIC_MAXTIMER;
 
 // DHT (12)
+// Download from https://github.com/wemos/WEMOS_DHT12_Arduino_Library
 #include <WEMOS_DHT12.h>
 #include "Wire.h"
 
 //DHT (22)
+// Included in Adafruit Library
 #include <DHT.h>
 #include <DHT_U.h>
 
