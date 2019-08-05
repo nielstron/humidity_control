@@ -3,13 +3,15 @@ This project gives a simple way to deploy temperature and humidity sensors aroun
 
 #### This fork is meant as an example on how to use the DHT12 sensor with the [Wemos DHT12 library](https://github.com/wemos/WEMOS_DHT12_Arduino_Library) as it is/was not supported by the Adafruit DHT Sensor library
 
-The sensor publishes to 2 MQTT topics:
+The sensor publishes to 8 MQTT topics, 4 per connected sensor:
 - Temperature topic (example: `home/livingroom/temperature`): The sensor publishes the temperature in Celsius (example: `23.10`).
 - Humidity topic (example: `home/livingroom/humidity`): The sensor publishes the relative humidity in percent (example: `37.40`).
 - Absolute humidity topic (example `home/livingroom/absolute_humidity`): The sensor publishes [an approximation to the absolute humidity]((https://carnotcycle.wordpress.com/2012/08/04/how-to-convert-relative-humidity-to-absolute-humidity/) in g/m³ (example: `12.0`)
 - Dew point topic (example: `home/livingroom/dew_point`): The sensor publishes [an approximation to the dew point](https://carnotcycle.wordpress.com/2012/08/04/how-to-convert-relative-humidity-to-absolute-humidity/) in °C according to air humidity and temperature (example: `8.0`)
 
 In the sample configuration, the values are published every 30 seconds, but that is configurable.
+
+This example was also used to control a recuperator based on the humdity and temperature difference between fresh/outside air and room/inside air.
 
 ## Installation/Configuration
 I'll explain how to set the sensor up as an [MQTT sensor](https://home-assistant.io/components/sensor.mqtt/) in Home Assistant. This guide assumes that you already have Home Assistant set up and running. If not, see the installation guides [here](https://home-assistant.io/getting-started/).
