@@ -34,7 +34,8 @@ I'll explain how to set the sensor up as an [MQTT sensor](https://home-assistant
 I'm using ESP8266-01 microcontrollers for my sensors because they are so cheap and small. The downside of the size and price is that programming them can be a bit of a hassle. There are many sites that go into detail, so I won't do it here. You'll need an ESP set up to work with the Arduino IDE. See the readme [here](https://github.com/esp8266/Arduino) for instructions.
 
 1. Using the Library Manager in the Arduino IDE, install the [Adafruit Unified Sensor Library](https://github.com/adafruit/Adafruit_Sensor) and the [DHT Sensor Library](https://github.com/adafruit/DHT-sensor-library). You can find the Library Manager in the "Sketch" menu under "Include Library" -> "Manage Libraries..."
-2. In the `mqtt-esp8266_dht22` folder, update the `config-sample.h` file with your WiFi, MQTT, and DHT settings.
+2. Via [the WEMOS DHT12 github](https://github.com/wemos/WEMOS_DHT12_Arduino_Library), download and install the DHT12 library as described.
+3. In the `mqtt-esp8266_dht22` folder, update the `config-sample.h` file with your WiFi, MQTT, and DHT settings.
 4. Ensure that the `CONFIG_MQTT_CLIENT_ID` setting is a unique value for your network.
 5. Set `CONFIG_MQTT_TOPIC_TEMP` and `CONFIG_MQTT_TOPIC_HUMID` to match the values you put in your `configuration.yaml`.
 6. Save the configuration file as `config.h`.
