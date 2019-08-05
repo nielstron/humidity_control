@@ -1,4 +1,4 @@
-# MQTT-Connected DHT Temperature and Humidity Sensors Using ESP8266 Modules
+# MQTT-Connected DHT Temperature and Humidity Sensors Using ESP8266 Modules (for DHT12)
 This project gives a simple way to deploy temperature and humidity sensors around your house using cheap components and the MQTT protocol. I use it with [Home Assistant](https://home-assistant.io/), an amazing, extensible, open-source home automation system, but this project could be used standalone or with any platform.
 
 #### This fork is meant as an example on how to use the DHT12 sensor with the [Wemos DHT12 library](https://github.com/wemos/WEMOS_DHT12_Arduino_Library) as it is/was not supported by the Adafruit DHT Sensor library
