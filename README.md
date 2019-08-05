@@ -1,11 +1,13 @@
 # MQTT-Connected DHT Temperature and Humidity Sensors Using ESP8266 Modules
 This project gives a simple way to deploy temperature and humidity sensors around your house using cheap components and the MQTT protocol. I use it with [Home Assistant](https://home-assistant.io/), an amazing, extensible, open-source home automation system, but this project could be used standalone or with any platform.
 
-### This fork is meant as an example on how to use the DHT12 sensor with the [Wemos DHT12 library](https://github.com/wemos/WEMOS_DHT12_Arduino_Library) as it is/was not supported by the Adafruit DHT Sensor library
+#### This fork is meant as an example on how to use the DHT12 sensor with the [Wemos DHT12 library](https://github.com/wemos/WEMOS_DHT12_Arduino_Library) as it is/was not supported by the Adafruit DHT Sensor library
 
 The sensor publishes to 2 MQTT topics:
-- Temperature topic (example: `home/livingroom/temperature`): The sensor publishes the temperature in Fahrenheit (example: `67.10`).
+- Temperature topic (example: `home/livingroom/temperature`): The sensor publishes the temperature in Celsius (example: `23.10`).
 - Humidity topic (example: `home/livingroom/humidity`): The sensor publishes the relative humidity in percent (example: `37.40`).
+- Absolute humidity topic (example `home/livingroom/absolute_humidity`): The sensor publishes [an approximation to the absolute humidity]((https://carnotcycle.wordpress.com/2012/08/04/how-to-convert-relative-humidity-to-absolute-humidity/) in g/m³ (example: `12.0`)
+- Dew point topic (example: `home/livingroom/dew_point`): The sensor publishes [an approximation to the dew point](https://carnotcycle.wordpress.com/2012/08/04/how-to-convert-relative-humidity-to-absolute-humidity/) in °C according to air humidity and temperature (example: `8.0`)
 
 In the sample configuration, the values are published every 30 seconds, but that is configurable.
 
@@ -21,13 +23,25 @@ I'll explain how to set the sensor up as an [MQTT sensor](https://home-assistant
         name: "Living Room Temperature"
         state_topic: "home/livingroom/temperature"
         qos: 0
-        unit_of_measurement: "°F"
+        unit_of_measurement: "°C"
 
       - platform: mqtt
         name: "Living Room Humidity"
         state_topic: "home/livingroom/humidity"
         qos: 0
         unit_of_measurement: "%"
+   
+      - platform: mqtt
+        name: "Living Room Absolute Humidity"
+        state_topic: "home/livingroom/absolute_humidity"
+        qos: 0
+        unit_of_measurement: "g/m³"
+  
+      - platform: mqtt
+        name: "Living Room Humidity"
+        state_topic: "home/livingroom/dew_point"
+        qos: 0
+        unit_of_measurement: "°C"
     ```
 2. Set the `name` and `state_topic` to values that make sense for you.
 3. Restart Home Assistant. Depending on how you installed it, the process differs. For a Raspberry Pi All-in-One install, use `sudo systemctl restart home-assistant.service` (or just restart the Pi).
@@ -44,5 +58,7 @@ I'm using ESP8266-01 microcontrollers for my sensors because they are so cheap a
 7. Open the `.ino` file in the Arduino IDE and upload to an ESP with the correct connections.
 
 #### Wiring
-For my sensors, I've soldered a simple proto-board. They aren't very pretty, but here is the basic wiring.
-![ESP DHT Wiring](https://raw.githubusercontent.com/corbanmailloux/esp-mqtt-dht/master/ESP%20DHT_bb.png)
+
+The wiring should be read from the comments in the `.ino` file.
+There is no proto-board layout or something similar.
+Sorry.
